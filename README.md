@@ -87,7 +87,7 @@ If you have Python installed, you can run the app from the source code.
 3.  **Select Test Type**: (Optional) If your experiment uses a repeated measures or paired design, check the "Use paired/repeated statistical tests" box.
 4.  **Generate**: Click the "Generate Analysis" button.
 5.  **Customize**: Use the sliders and dropdowns in the "Plot Customization" panel to adjust the appearance of your plot.
-6.  **Download**: Click the "Download Summary" button to save the statistical report or use the camera icon on the plot to save it as a PNG image.
+6.  **Download**: Click the "Download Summary" button to save the statistical report, or use the camera icon on the plot to save it as a PNG image or the "Download Plot" button to save the plot with different resolutions and file extensions (.png, .jpeg, .svg, or .pdf).
 
 ## 📝 Input Data Format
 
