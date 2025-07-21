@@ -1,4 +1,4 @@
-![CellBioStats Logo](https://github.com/brunicardoso/CellBioStats/raw/main/assets/logo.png)
+<img src="https://github.com/brunicardoso/CellBioStats/raw/main/assets/logo.png" alt="CellBioStats Logo" width="300"/>
 
 An interactive web application specifically designed for scientists in **cell biology, molecular biology, and biochemistry**. CellBioStats simplifies the creation of publication-quality **SuperPlots** and performs robust statistical analysis on hierarchical data, helping you visualize complex datasets and avoid common pitfalls like pseudoreplication.
 
