@@ -23,7 +23,7 @@ You can run CellBioStats in three different ways.
 
 This is the easiest method for most users. No installation is required.
 
-1.  Go to the [**Releases**](https://github.com/brunicardoso/CellBioStats/dist) page of this repository.
+1.  Go to the [**Dist**](https://github.com/brunicardoso/CellBioStats/dist) page of this repository.
 2.  Download the latest `.exe` file.
 3.  Double-click the file to run the application.
 
