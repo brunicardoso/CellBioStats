@@ -28,7 +28,7 @@ This is the easiest method for most users. No installation is required.
 1.  Go to the [**dist**](https://github.com/brunicardoso/CellBioStats/tree/main/dist) page of this repository.
 2.  Download the latest `.exe` file.
 3.  Double-click the file to run the application. 
-BE AWARE THAT IT MIGHT BE TARGETED AS A VIRUS BY SOME ANTI VIRUS
+BE AWARE THAT IT MIGHT BE FLAGGED AS A VIRUS BY SOME ANTI VIRUS
 SOFTWARE AND YOU MIGHT NEED TO TEMPORARILY DISABLE THE DEFENSE SYSTEM TO RUN THE APP!.
 
 ### Option 2: Google Colab (Cloud-Based)
@@ -37,7 +37,8 @@ Run the app in your browser without any local installation.
 
 1.  Click the "Open in Colab" badge at the top of this README.
 2.  Run the cells in the notebook to start the application. 
-In Colab, it won't be possible to download the plots as PNG and JPEG by clicking on the "Download Plot" button. But, you are still going to be able to download the PNG file by clicking on the camera icon. After choosing SVG or PDF extensions, the file can be found in the Colab folder panel.
+
+Note that in Colab it won't be possible to download the plots as PNG and JPEG by clicking on the "Download Plot" button. But, you are still going to be able to download the PNG file by clicking on the camera icon. After choosing SVG or PDF extensions, the file can be found in the Colab folder panel.
 
 ### Option 3: Run Locally
 
@@ -148,8 +149,9 @@ CellBioStats is designed to perform statistically sound analysis by respecting t
 
 
 ## **Cite our work** 
-- Please, cite our app if you used it in your work/research:
-ZENODO DOI
+Bruni-Cardoso, A. CellBioStats, an application for robust visualization and statistical analysis of data from cell and molecular biology experiments
+[![DOI](https://zenodo.org/badge/doi.org/10.5281/zenodo.16394653.svg)](https://doi.org/10.5281/zenodo.16394653)
+ 
 
 ## License
 
