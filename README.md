@@ -2,7 +2,7 @@
   <img src="https://github.com/brunicardoso/CellBioStats/raw/main/assets/logo.png" alt="CellBioStats Logo" width="300"/>
 </p>
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/<USERNAME>/<REPO_NAME>/blob/<BRANCH_NAME>/<PATH_TO_NOTEBOOK.ipynb>)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github.com/brunicardoso/CellBioStats/blob/main/CellBioStats.ipynb)
 
 CellBioStats is an application that simplifies the creation of publication-quality [**SuperPlots**](https://rupress.org/jcb/article/219/6/e202001064/151717/SuperPlots-Communicating-reproducibility-and) and performs  statistical analysis on hierarchical data from common experimental results in **cell biology, molecular biology, and biochemistry**, helping you visualize complex datasets and avoid pitfalls like pseudoreplication.
 
@@ -12,7 +12,7 @@ CellBioStats is an application that simplifies the creation of publication-quali
 * **Automated Statistical Analysis**: Automatically performs normality checks, variance homogeneity tests, and selects the appropriate statistical test for your data.
 * **Hierarchical Statistics**: Avoids pseudoreplication by correctly performing statistical tests on **replicate means**, not on raw technical measurements.
 * **Paired & Unpaired Data**: Handles both independent (unpaired) and repeated measures (paired) experimental designs. 
-* **Easy Data Upload**: Supports both `.csv` and `.xlsx` file formats.
+* **Data Upload**: Supports both `.csv` and `.xlsx` file formats.
 * **Plot Customization**: Allows customization of plot aesthetics (font size, color schemes, marker size, and plot templates).
 * **Downsampling for plot visualization**: Option to display a random subset of your data points to keep plots clean and responsive with very large datasets.
 * **Export Results**: Download the detailed statistical summary as a `.txt` file and the plot as a `.png, .jpeg, .svg or .pdf` file directly from the app.
@@ -27,20 +27,23 @@ This is the easiest method for most users. No installation is required.
 
 1.  Go to the [**dist**](https://github.com/brunicardoso/CellBioStats/tree/main/dist) page of this repository.
 2.  Download the latest `.exe` file.
-3.  Double-click the file to run the application.
+3.  Double-click the file to run the application. 
+BE AWARE THAT IT MIGHT BE TARGETED AS A VIRUS BY SOME ANTI VIRUS
+SOFTWARE AND YOU MIGHT NEED TO TEMPORARILY DISABLE THE DEFENSE SYSTEM TO RUN THE APP!.
 
 ### Option 2: Google Colab (Cloud-Based)
 
 Run the app in your browser without any local installation.
 
 1.  Click the "Open in Colab" badge at the top of this README.
-2.  Run the cells in the notebook to start the application.
+2.  Run the cells in the notebook to start the application. 
+In Colab, it won't be possible to download the plots as PNG and JPEG by clicking on the "Download Plot" button. But, you are still going to be able to download the PNG file by clicking on the camera icon. After choosing SVG or PDF extensions, the file can be found in the Colab folder panel.
 
-### Option 3: Run Locally (For Developers)
+### Option 3: Run Locally
 
 If you have Python installed, you can run the app from the source code.
 
-1.  **Clone the repository:**
+1.  **Clone the repository as below or just directly download the app.py file:**
     ```bash
     git clone [https://github.com/brunicardoso/CellBioStats.git](https://github.com/brunicardoso/CellBioStats.git)
     cd CellBioStats
@@ -82,7 +85,7 @@ If you have Python installed, you can run the app from the source code.
 
 4.  Open your web browser and navigate to `http://127.0.0.1:8050`.
 
-## 📊 How to Use the App
+## How to Use the App
 
 1.  **Upload Data**: Click the "Upload Data" button and select your `.csv` or `.xlsx` file. You can try it on our sample data https://github.com/brunicardoso/CellBioStats/raw/main
 2.  **Map Columns**: Select the appropriate columns from your file for **Treatment**, **Value**, and **Replicate**.
@@ -91,17 +94,17 @@ If you have Python installed, you can run the app from the source code.
 5.  **Customize**: Use the sliders and dropdowns in the "Plot Customization" panel to adjust the appearance of your plot.
 6.  **Download**: Click the "Download Summary" button to save the statistical report, or use the camera icon on the plot to save it as a PNG image or the "Download Plot" button to save the plot with different resolutions and file extensions (.png, .jpeg, .svg, or .pdf).
 
-## 📝 Input Data Format
+## Input Data Format
 
 The application expects your data to be in a specific format, like in the example below. You must have at least three columns:
 
 * **Treatment Column**: Identifies the different experimental groups (e.g., 'Control', 'Drug A').
-* **Value Column**: Contains the numeric measurement data (the dependent variable; e.g., Cell size).
+* **Value Column**: Contains the numeric measurement data (the dependent variable; e.g., cell size, expression level, etc).
 * **Replicate Column**: Identifies the independent experimental replicates (e.g., experiment number of independent replications done in different days or animal ID).
 
 Here is an example of a valid data structure:
 
-| Treatment | Cell size | Replicate |
+| Treatment | Cell_size | Replicate |
 | :-------- | :-------- | :-------- |
 | Control   | 10.5      | 1         |
 | Control   | 11.2      | 1         |
@@ -112,7 +115,7 @@ Here is an example of a valid data structure:
 | Drug A    | 16.5      | 2         |
 | Drug A    | 17.1      | 2         |
 
-## 🔬 Statistical Methodology
+## Statistical Methodology
 
 CellBioStats is designed to perform statistically sound analysis by respecting the hierarchical nature of typical biological data.
 
@@ -131,10 +134,10 @@ CellBioStats is designed to perform statistically sound analysis by respecting t
 
 ## Built With
 
-* [**Dash**](https://dash.plotly.com/) - The web framework for building the application.
-* [**Plotly**](https://plotly.com/python/) - For creating interactive data visualizations.
-* [**Pandas**](https://pandas.pydata.org/) - For data manipulation and analysis.
-* [**SciPy**](https://scipy.org/) & [**Statsmodels**](https://www.statsmodels.org/) - For performing statistical tests.
+* [**Dash**](https://dash.plotly.com/) 
+* [**Plotly**](https://plotly.com/python/) 
+* [**Pandas**](https://pandas.pydata.org/) 
+* [**SciPy**](https://scipy.org/) & [**Statsmodels**](https://www.statsmodels.org/) 
 * [**PyInstaller**](https://pyinstaller.org/) - For packaging the standalone `.exe` application.
 
 ## References
