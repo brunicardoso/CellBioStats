@@ -6,7 +6,7 @@
 
 CellBioStats is an application that simplifies the creation of publication-quality [**SuperPlots**](https://rupress.org/jcb/article/219/6/e202001064/151717/SuperPlots-Communicating-reproducibility-and) and performs  statistical analysis on hierarchical data from common experimental results in **cell biology, molecular biology, and biochemistry**, helping you visualize complex datasets and avoid pitfalls like pseudoreplication.
 
-The current version is still limited in terms of case uses, but the idea is the project to go to grow to be more comprehensive.
+The current version is still limited in terms of case uses, but the idea is the project to grow to be more comprehensive.
 
 ## Features
 
