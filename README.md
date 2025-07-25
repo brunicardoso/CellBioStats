@@ -6,6 +6,8 @@
 
 CellBioStats is an application that simplifies the creation of publication-quality [**SuperPlots**](https://rupress.org/jcb/article/219/6/e202001064/151717/SuperPlots-Communicating-reproducibility-and) and performs  statistical analysis on hierarchical data from common experimental results in **cell biology, molecular biology, and biochemistry**, helping you visualize complex datasets and avoid pitfalls like pseudoreplication.
 
+The current version is still limited in terms of case uses, but the idea is the project to go to grow to be more comprehensive.
+
 ## Features
 
 * **Interactive SuperPlots**: Generates publication-quality SuperPlots, showing individual data points, replicate means, and overall treatment means with standard error (SEM).
@@ -88,11 +90,11 @@ If you have Python installed, you can run the app from the source code.
 
 ## How to Use the App
 
-1.  **Upload Data**: Click the "Upload Data" button and select your `.csv` or `.xlsx` file. You can try it on our sample data https://github.com/brunicardoso/CellBioStats/raw/main
+1.  **Upload Data**: Click the "Upload Data" button and select your `.csv` or `.xlsx` file. You can try it on our [*sample data*](https://github.com/brunicardoso/CellBioStats/blob/main/sample_data.csv)
 2.  **Map Columns**: Select the appropriate columns from your file for **Treatment**, **Value**, and **Replicate**.
 3.  **Select Test Type**: (Optional) If your experiment uses a repeated measures or paired design, check the "Use paired/repeated statistical tests" box. [*Read this if you are not sure about choosing paired or unpaired tests*](https://rupress.org/jcb/article/219/6/e202001064/151717/SuperPlots-Communicating-reproducibility-and)
-4.  **Generate**: Click the "Generate Analysis" button.
-5.  **Customize**: Use the sliders and dropdowns in the "Plot Customization" panel to adjust the appearance of your plot.
+4.  **Generate**: Click the "Generate Analysis/Update Plot" button.
+5.  **Customize**: Use the sliders and dropdowns in the "Plot Customization" panel to adjust the appearance of your plot. Click the "Generate Analysis/Update Plot" button to update the plot.
 6.  **Download**: Click the "Download Summary" button to save the statistical report, or use the camera icon on the plot to save it as a PNG image or the "Download Plot" button to save the plot with different resolutions and file extensions (.png, .jpeg, .svg, or .pdf).
 
 ## Input Data Format
@@ -149,7 +151,7 @@ CellBioStats is designed to perform statistically sound analysis by respecting t
 
 
 ## **Cite our work** 
-Bruni-Cardoso, A. CellBioStats, an application for robust visualization and statistical analysis of data from cell and molecular biology experiments
+Bruni-Cardoso, A. (2025). CellBioStats, an application for robust visualization and statistical analysis of data from cell and molecular biology experiments 
 [![DOI](https://zenodo.org/badge/doi.org/10.5281/zenodo.16394653.svg)](https://doi.org/10.5281/zenodo.16394653)
  
 
