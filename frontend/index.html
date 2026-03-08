@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CellBioStats</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/app.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+                    colors: {
+                        primary: { 50:'#EEF2FF',100:'#E0E7FF',200:'#C7D2FE',300:'#A5B4FC',400:'#818CF8',500:'#6366F1',600:'#4F46E5',700:'#4338CA',800:'#3730A3',900:'#312E81' },
+                        accent: { 50:'#ECFDF5',100:'#D1FAE5',200:'#A7F3D0',300:'#6EE7B7',400:'#34D399',500:'#10B981',600:'#059669' },
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+    <!-- Section 1: Upload -->
+    <section id="section-upload" class="section-visible min-h-screen flex flex-col items-center justify-center px-4">
+        <div class="text-center max-w-2xl mx-auto">
+            <img src="/assets/logo.png" alt="CellBioStats" class="mx-auto mb-8 h-48 md:h-64 object-contain">
+            <p class="text-gray-500 text-lg mb-10">Generate interactive SuperPlots with automated statistical analysis</p>
+
+            <div id="drop-zone"
+                 class="border-2 border-dashed border-gray-300 rounded-2xl p-12 cursor-pointer transition-all duration-300 hover:border-primary-400 hover:bg-primary-50/30">
+                <div id="drop-zone-content">
+                    <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                    </svg>
+                    <p class="text-gray-600 font-medium">Drop your CSV or XLSX file here</p>
+                    <p class="text-gray-400 text-sm mt-1">or click to browse</p>
+                </div>
+                <input type="file" id="file-input" accept=".csv,.xlsx,.xls" class="hidden">
+            </div>
+
+            <div id="upload-feedback" class="mt-4 text-sm hidden"></div>
+            <div id="upload-spinner" class="mt-6 hidden">
+                <div class="spinner mx-auto"></div>
+                <p class="text-gray-400 text-sm mt-2">Uploading...</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 2: Configure -->
+    <section id="section-configure" class="section-hidden px-4 py-16">
+        <div class="max-w-3xl mx-auto">
+            <button id="btn-back-upload" class="text-gray-400 hover:text-gray-600 text-sm mb-6 flex items-center gap-1 transition-colors">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                Upload a different file
+            </button>
+
+            <h2 class="text-2xl font-semibold text-gray-800 mb-2">Map your columns</h2>
+            <p class="text-gray-500 mb-8" id="file-info"></p>
+
+            <!-- Data preview -->
+            <div id="data-preview-container" class="mb-8 overflow-x-auto rounded-xl border border-gray-200 hidden">
+                <table id="data-preview" class="min-w-full text-sm">
+                    <thead id="preview-head" class="bg-gray-50"></thead>
+                    <tbody id="preview-body" class="divide-y divide-gray-100"></tbody>
+                </table>
+            </div>
+
+            <!-- Column mapping -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Treatment / Group</label>
+                    <select id="treatment-col" class="select-field">
+                        <option value="">Select column...</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Value / Measurement</label>
+                    <select id="value-col" class="select-field">
+                        <option value="">Select column...</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Replicate</label>
+                    <select id="replicate-col" class="select-field">
+                        <option value="">Select column...</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Paired toggle -->
+            <label class="flex items-center gap-3 mb-8 cursor-pointer">
+                <div class="relative">
+                    <input type="checkbox" id="paired-toggle" class="sr-only peer">
+                    <div class="w-10 h-6 bg-gray-200 rounded-full peer-checked:bg-primary-600 transition-colors"></div>
+                    <div class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform peer-checked:translate-x-4"></div>
+                </div>
+                <span class="text-sm text-gray-700">Use paired / repeated measures tests</span>
+            </label>
+
+            <!-- Analyze button -->
+            <button id="btn-analyze" disabled
+                    class="w-full py-3 rounded-xl bg-primary-600 text-white font-semibold text-lg disabled:opacity-40 disabled:cursor-not-allowed hover:bg-primary-700 active:bg-primary-800 transition-colors">
+                Analyze
+            </button>
+            <div id="analyze-spinner" class="mt-4 hidden text-center">
+                <div class="spinner mx-auto"></div>
+                <p class="text-gray-400 text-sm mt-2">Running analysis...</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 3: Results -->
+    <section id="section-results" class="section-hidden px-4 py-16">
+        <div class="max-w-6xl mx-auto">
+            <button id="btn-back-configure" class="text-gray-400 hover:text-gray-600 text-sm mb-6 flex items-center gap-1 transition-colors">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                Back to column mapping
+            </button>
+
+            <h2 class="text-2xl font-semibold text-gray-800 mb-8">Results</h2>
+
+            <!-- Plot -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 md:p-6 mb-8">
+                <div id="plot-container" class="w-full"></div>
+                <div class="flex flex-wrap items-center gap-3 mt-4 pt-4 border-t border-gray-100">
+                    <select id="plot-format" class="select-field-sm">
+                        <option value="png">PNG</option>
+                        <option value="jpeg">JPEG</option>
+                        <option value="svg">SVG</option>
+                        <option value="pdf">PDF</option>
+                    </select>
+                    <select id="plot-resolution" class="select-field-sm">
+                        <option value="1">Standard</option>
+                        <option value="2">High Res (2x)</option>
+                    </select>
+                    <button id="btn-download-plot" class="btn-secondary">Download Plot</button>
+                    <div id="plot-download-spinner" class="hidden"><div class="spinner-sm"></div></div>
+                </div>
+            </div>
+
+            <!-- Plot customization -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 md:p-6 mb-8">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-medium text-gray-700">Plot Customization</h3>
+                    <div id="replot-spinner" class="hidden"><div class="spinner-sm"></div></div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div>
+                        <label class="block text-sm text-gray-600 mb-1">Font Size</label>
+                        <input type="range" id="font-size" min="10" max="45" value="18" class="w-full accent-primary-600">
+                        <span id="font-size-val" class="text-xs text-gray-400">18</span>
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-600 mb-1">Marker Size</label>
+                        <input type="range" id="marker-size" min="2" max="20" step="2" value="6" class="w-full accent-primary-600">
+                        <span id="marker-size-val" class="text-xs text-gray-400">6</span>
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-600 mb-1">Color Palette</label>
+                        <select id="color-map" class="select-field"></select>
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-600 mb-1">Plot Style</label>
+                        <select id="plot-style" class="select-field">
+                            <option value="plotly">Plotly</option>
+                            <option value="plotly_white">Plotly White</option>
+                            <option value="plotly_dark">Plotly Dark</option>
+                            <option value="ggplot2">ggplot2</option>
+                            <option value="seaborn">Seaborn</option>
+                            <option value="simple_white">Simple White</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <label class="block text-sm text-gray-600">Log Scale (Y-axis)</label>
+                        <input type="checkbox" id="log-scale" class="accent-primary-600">
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <label class="block text-sm text-gray-600">Show p-value stars</label>
+                        <input type="checkbox" id="show-stars" checked class="accent-primary-600">
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <label class="block text-sm text-gray-600">Show axes</label>
+                        <input type="checkbox" id="show-axes" checked class="accent-primary-600">
+                    </div>
+                    <div class="lg:col-span-2">
+                        <label class="block text-sm text-gray-600 mb-2">Data Points to Display</label>
+                        <div class="flex items-center gap-6 flex-wrap">
+                            <label class="flex items-center gap-2 text-sm text-gray-700">
+                                <input type="radio" name="downsample" value="all" checked class="accent-primary-600"> All
+                            </label>
+                            <label class="flex items-center gap-2 text-sm text-gray-700">
+                                <input type="radio" name="downsample" value="percentage" class="accent-primary-600"> Percentage
+                                <input type="number" id="downsample-pct" min="1" max="100" value="50" disabled class="w-20 px-2 py-1 border rounded text-sm disabled:opacity-40">
+                                <span class="text-gray-400 text-xs">%</span>
+                            </label>
+                            <label class="flex items-center gap-2 text-sm text-gray-700">
+                                <input type="radio" name="downsample" value="number" class="accent-primary-600"> Fixed #
+                                <input type="number" id="downsample-num" min="1" value="20" disabled class="w-20 px-2 py-1 border rounded text-sm disabled:opacity-40">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div id="ks-indicator" class="hidden mt-4 flex items-center gap-2 text-sm px-3 py-2 rounded-lg">
+                    <span id="ks-dot" class="inline-block w-2.5 h-2.5 rounded-full"></span>
+                    <span id="ks-text" class="text-gray-600"></span>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 md:p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-medium text-gray-700">Statistical Summary</h3>
+                    <button id="btn-download-stats" class="btn-secondary">Download .txt</button>
+                </div>
+                <pre id="stats-text" class="text-sm text-gray-600 whitespace-pre-wrap font-mono bg-gray-50 rounded-xl p-4 overflow-x-auto"></pre>
+            </div>
+        </div>
+    </section>
+
+    <!-- Error toast -->
+    <div id="error-toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-red-600 text-white px-6 py-3 rounded-xl shadow-lg text-sm hidden z-50 max-w-lg text-center"></div>
+
+    <script src="/js/api.js?v=6"></script>
+    <script src="/js/upload.js?v=6"></script>
+    <script src="/js/mapping.js?v=6"></script>
+    <script src="/js/plot.js?v=6"></script>
+    <script src="/js/results.js?v=6"></script>
+    <script src="/js/app.js?v=6"></script>
+</body>
+</html>
