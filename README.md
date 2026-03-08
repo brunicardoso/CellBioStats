@@ -21,7 +21,7 @@ The current version is still limited in terms of case uses, but the idea is the 
 
 ### Live App
 
-CellBioStats is deployed on Render. Visit the live app (URL provided after deployment).
+CellBioStats is deployed on Render.  [**Visit the live app**](https://cellbiostats.onrender.com/)
 
 ### Run Locally
 
@@ -46,11 +46,6 @@ CellBioStats is deployed on Render. Visit the live app (URL provided after deplo
 
 4.  Open your web browser and navigate to `http://localhost:8000`.
 
-### Google Colab
-
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/brunicardoso/CellBioStats/blob/main/CellBioStats.ipynb)
-
-Run the notebook version in your browser without any local installation.
 
 ## How to Use the App
 
@@ -122,7 +117,7 @@ CellBioStats is designed to perform statistically sound analysis by respecting t
 
 ## **Cite our work**
 Bruni-Cardoso, A. (2025). CellBioStats, an application for robust visualization and statistical analysis of data from cell and molecular biology experiments
-[![DOI](https://zenodo.org/badge/doi.org/10.5281/zenodo.16394653.svg)](https://doi.org/10.5281/zenodo.16394653)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16394653.svg)](https://doi.org/10.5281/zenodo.16394653)
 
 
 ## License
