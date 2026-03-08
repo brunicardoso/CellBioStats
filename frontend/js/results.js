@@ -22,7 +22,7 @@ function displayKsInfo(ksInfo) {
         dot.className = "inline-block w-2.5 h-2.5 rounded-full bg-green-400";
         text.className = "text-green-700";
     }
-    text.textContent = "KS test: " + ksInfo.summary;
+    text.textContent = "Downsampling: " + ksInfo.summary;
 }
 
 function initResults(getSessionId, getParams) {

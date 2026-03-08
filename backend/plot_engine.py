@@ -8,7 +8,7 @@ from scipy.stats import ks_2samp
 from .stats_engine import perform_statistical_analysis
 
 
-def _stratified_downsample(values_series, replicate_data, y_col, frac=None, n_samples=None, random_state=42):
+def _stratified_downsample(values_series, replicate_data, y_col, frac=None, n_samples=None, random_state=42, max_retries=3):
     """Downsample replicate data using stratified bin-based sampling to preserve distribution shape."""
     n = len(replicate_data)
 
@@ -18,19 +18,23 @@ def _stratified_downsample(values_series, replicate_data, y_col, frac=None, n_sa
     elif n_samples is not None:
         target_n = max(1, n_samples)
     else:
-        return replicate_data, None, None
+        return replicate_data, None, None, False
 
     # No downsampling needed
     if target_n >= n:
-        return replicate_data, None, None
+        return replicate_data, None, None, False
 
     original_values = values_series.values
 
     # For very small datasets, fall back to random sampling
     if n < 20:
-        sampled = replicate_data.sample(n=target_n, random_state=random_state)
-        stat, p_value = ks_2samp(original_values, sampled[y_col].values)
-        return sampled, stat, p_value
+        for attempt in range(1 + max_retries):
+            seed = random_state + attempt
+            sampled = replicate_data.sample(n=target_n, random_state=seed)
+            stat, p_value = ks_2samp(original_values, sampled[y_col].values)
+            if p_value >= 0.05:
+                return sampled, stat, p_value, False
+        return sampled, stat, p_value, True
 
     # Sturges' rule for bin count
     k = max(2, math.ceil(1 + math.log2(n)))
@@ -38,17 +42,24 @@ def _stratified_downsample(values_series, replicate_data, y_col, frac=None, n_sa
     replicate_data = replicate_data.copy()
     replicate_data['_bin'] = bins.values
 
-    sampled_parts = []
-    rng = np.random.RandomState(random_state)
-    for bin_label, group in replicate_data.groupby('_bin', observed=True):
-        bin_size = len(group)
-        bin_target = max(1, round(target_n * bin_size / n))
-        bin_target = min(bin_target, bin_size)
-        sampled_parts.append(group.sample(n=bin_target, random_state=rng))
+    for attempt in range(1 + max_retries):
+        seed = random_state + attempt
+        sampled_parts = []
+        rng = np.random.RandomState(seed)
+        for bin_label, group in replicate_data.groupby('_bin', observed=True):
+            bin_size = len(group)
+            bin_target = max(1, round(target_n * bin_size / n))
+            bin_target = min(bin_target, bin_size)
+            sampled_parts.append(group.sample(n=bin_target, random_state=rng))
 
-    sampled = pd.concat(sampled_parts).drop(columns=['_bin'])
-    stat, p_value = ks_2samp(original_values, sampled[y_col].values)
-    return sampled, stat, p_value
+        sampled = pd.concat(sampled_parts).drop(columns=['_bin'])
+        if len(sampled) > target_n:
+            sampled = sampled.sample(n=target_n, random_state=rng)
+        stat, p_value = ks_2samp(original_values, sampled[y_col].values)
+        if p_value >= 0.05:
+            return sampled, stat, p_value, False
+
+    return sampled, stat, p_value, True
 
 
 def create_interactive_superplot(data, x_col, y_col, replicate_col, paired=False, width=900, height=720, font_size=18, color_map='Plotly', template='plotly', marker_size=6, downsample_mode='all', downsample_value=None, log_scale=False, show_stars=True, show_axes=True):
@@ -92,16 +103,16 @@ def create_interactive_superplot(data, x_col, y_col, replicate_col, paired=False
             try:
                 if downsample_mode == 'percentage':
                     frac = max(0.01, min(1.0, float(downsample_value) / 100.0))
-                    data_to_plot, ks_stat, ks_p = _stratified_downsample(
+                    data_to_plot, ks_stat, ks_p, ks_failed = _stratified_downsample(
                         replicate_data[plot_y_col], replicate_data, plot_y_col, frac=frac)
                     if ks_stat is not None:
-                        ks_results.append({'replicate': replicate, 'ks_stat': ks_stat, 'ks_p': ks_p})
+                        ks_results.append({'replicate': replicate, 'ks_stat': ks_stat, 'ks_p': ks_p, 'failed': ks_failed})
                 elif downsample_mode == 'number':
                     n_samples = max(1, int(downsample_value))
-                    data_to_plot, ks_stat, ks_p = _stratified_downsample(
+                    data_to_plot, ks_stat, ks_p, ks_failed = _stratified_downsample(
                         replicate_data[plot_y_col], replicate_data, plot_y_col, n_samples=n_samples)
                     if ks_stat is not None:
-                        ks_results.append({'replicate': replicate, 'ks_stat': ks_stat, 'ks_p': ks_p})
+                        ks_results.append({'replicate': replicate, 'ks_stat': ks_stat, 'ks_p': ks_p, 'failed': ks_failed})
             except (ValueError, TypeError):
                 data_to_plot = replicate_data
 

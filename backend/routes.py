@@ -86,13 +86,12 @@ async def analyze(req: AnalyzeRequest):
 
         ks_info = None
         if ks_results:
-            min_p = min(r['ks_p'] for r in ks_results)
-            warning = min_p < 0.05
-            if warning:
-                summary = f"Warning: distribution may differ (worst p={min_p:.2f})"
+            any_failed = any(r['failed'] for r in ks_results)
+            if any_failed:
+                summary = "Downsampled distribution may not represent the original data. Try using a larger sample size or percentage."
             else:
-                summary = f"Good (worst p={min_p:.2f})"
-            ks_info = {"warning": warning, "min_p_value": round(min_p, 4), "summary": summary}
+                summary = "Downsampled points represent the original distribution well."
+            ks_info = {"warning": any_failed, "summary": summary}
 
         return {
             "plot_json": fig.to_json(),
